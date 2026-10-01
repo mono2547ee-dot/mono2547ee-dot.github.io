@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>บัญชาฤทธิ์ ธรรมพลาภรณ์ · ผลงานรายวิชา Graph Database</title>
+<meta name="description" content="บัญชาฤทธิ์ ธรรมพลาภรณ์ (664245038) รวมผลงานรายวิชา Graph Database: Club Recommendation, Manga Recommender บน Colab, Neo4j และเว็บแอป Streamlit">
+<meta name="theme-color" content="#010409">
+<link rel="icon" href="assets/profile.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  วิธีแก้ไขหน้านี้ (ไม่ต้องเขียนโค้ดเพิ่ม)
+  1) ชื่อ / ข้อความแนะนำตัว  -> ค้นหาคำว่า  "mono2547ee"  และ  "bio"  แล้วแก้ข้อความ
+  2) ลิงก์งาน               -> แก้ค่า href="..." ในแต่ละการ์ด (id="work1" ถึง "work4")
+  3) รูปโปรไฟล์             -> วางไฟล์ใหม่ทับ assets/profile.jpg
+  4) รูปปกแต่ละงาน          -> วางไฟล์ใหม่ทับ assets/work1.jpg ... work4.jpg
+-->
+<style>
+  :root{
+    --bg:#0d1117; --bar:#010409; --surface:#161b22; --surface2:#1c2128;
+    --border:#30363d; --text:#e6edf3; --muted:#9198a1; --blue:#4493f8;
+    --green:#238636; --green-hover:#2ea043; --tag-bg:rgba(56,139,253,.15);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font-family:"Noto Sans Thai",Tahoma,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.6}
+  a{color:var(--blue);text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:focus-visible,.btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+  /* ---------- top bar ---------- */
+  .topbar{position:sticky;top:0;z-index:10;background:var(--bar);border-bottom:1px solid var(--border)}
+  .topbar-inner{max-width:1240px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:16px}
+  .brand{display:flex;align-items:center;gap:10px;color:var(--text);font-weight:600}
+  .brand:hover{text-decoration:none}
+  .brand svg{width:28px;height:28px;fill:var(--text)}
+  .spacer{flex:1}
+  .topbar nav{display:flex;gap:20px;font-size:14px}
+  .topbar nav a{color:var(--muted)}
+  .topbar nav a:hover{color:var(--text);text-decoration:none}
+
+  /* ---------- layout ---------- */
+  .layout{max-width:1240px;margin:0 auto;padding:32px 24px 56px;
+    display:grid;grid-template-columns:296px 1fr;gap:40px;align-items:start}
+
+  /* ---------- profile ---------- */
+  .profile{position:sticky;top:84px}
+  .avatar{width:100%;max-width:280px;aspect-ratio:1;border-radius:50%;object-fit:cover;
+    border:1px solid var(--border);display:block;box-shadow:0 0 0 4px rgba(68,147,248,.12)}
+  .profile h1{font-size:26px;line-height:1.3;margin:20px 0 0;font-weight:600}
+  .handle{color:var(--muted);font-size:20px;font-weight:300;margin:0}
+  .bio{margin:16px 0 0;color:var(--text)}
+  .pbtn{display:block;width:100%;margin-top:16px;text-align:center;padding:6px 16px;border:1px solid var(--border);
+    border-radius:6px;background:var(--surface);color:var(--text);font-weight:500;font-size:14px}
+  .pbtn:hover{background:var(--surface2);text-decoration:none}
+  .facts{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:6px;color:var(--muted);font-size:14px}
+  .facts b{color:var(--text);font-weight:600}
+  .side-title{margin:28px 0 8px;font-size:14px;font-weight:600;color:var(--text)}
+  .quick{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+  .quick a{display:flex;gap:10px;align-items:flex-start;padding:6px 8px;border-radius:6px;color:var(--text);font-size:14px;line-height:1.4}
+  .quick a:hover{background:var(--surface);text-decoration:none}
+  .quick .dot{flex:none;width:20px;height:20px;border-radius:50%;background:var(--tag-bg);color:var(--blue);
+    font-size:12px;font-weight:600;display:grid;place-items:center;margin-top:1px}
+
+  /* ---------- content ---------- */
+  .head h2{font-size:24px;margin:0;font-weight:600}
+  .head p{margin:4px 0 24px;color:var(--muted)}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+  .card{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);
+    border-radius:12px;overflow:hidden;transition:border-color .15s,transform .15s;scroll-margin-top:90px}
+  .card:hover{border-color:#6e7681;transform:translateY(-2px)}
+  .thumb{display:block;aspect-ratio:16/10;background:#fff;overflow:hidden;border-bottom:1px solid var(--border)}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+  .body{padding:20px;display:flex;flex-direction:column;gap:12px;flex:1}
+  .badge{align-self:flex-start;font-size:12px;font-weight:600;color:var(--muted);border:1px solid var(--border);
+    border-radius:999px;padding:1px 10px}
+  .card h3{margin:0;font-size:20px;line-height:1.35;font-weight:600}
+  .card p{margin:0;color:var(--muted);font-size:15px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0;padding:0}
+  .tags li{background:var(--tag-bg);color:var(--blue);border-radius:999px;font-size:12px;font-weight:500;padding:2px 10px}
+  .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:6px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:6px;font-size:14px;font-weight:500;
+    border:1px solid var(--border);background:var(--surface2);color:var(--text)}
+  .btn:hover{background:#262c36;text-decoration:none}
+  .btn.primary{background:var(--green);border-color:rgba(240,246,252,.1);color:#fff}
+  .btn.primary:hover{background:var(--green-hover)}
+
+  footer{border-top:1px solid var(--border);color:var(--muted);font-size:13px;text-align:center;padding:24px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:1100px){.cards{grid-template-columns:1fr}}
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;gap:28px;padding:24px 16px 40px}
+    .profile{position:static;display:grid;grid-template-columns:120px 1fr;column-gap:20px;align-items:center}
+    .avatar{grid-row:1/4;max-width:120px}
+    .profile h1{margin-top:0;font-size:22px}
+    .handle{font-size:16px}
+    .profile .bio,.profile .pbtn,.profile .facts,.profile .side-title,.profile .quick{grid-column:1/-1}
+    .topbar nav{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{transition:none}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="#top" aria-label="หน้าแรก">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2.75C2 1.78 2.78 1 3.75 1h8.5c.97 0 1.75.78 1.75 1.75v10.5A1.75 1.75 0 0 1 12.25 15h-8.5A1.75 1.75 0 0 1 2 13.25Zm1.75-.25a.25.25 0 0 0-.25.25v10.5c0 .14.11.25.25.25h8.5a.25.25 0 0 0 .25-.25V2.75a.25.25 0 0 0-.25-.25ZM5 4.5h6V6H5Zm0 3h6V9H5Z"/></svg>
+      <span>Portfolio</span>
+    </a>
+    <span class="spacer"></span>
+    <nav aria-label="เมนูหลัก">
+      <a href="#works">งานทั้งหมด</a>
+      <a href="https://github.com/mono2547ee-dot" target="_blank" rel="noopener">GitHub ↗</a>
+    </nav>
+  </div>
+</header>
+
+<div class="layout" id="top">
+
+  <!-- ===== โปรไฟล์ ===== -->
+  <aside class="profile">
+    <img class="avatar" src="assets/profile.jpg" alt="รูปโปรไฟล์ของ บัญชาฤทธิ์ ธรรมพลาภรณ์">
+    <div>
+      <h1>บัญชาฤทธิ์ ธรรมพลาภรณ์</h1>
+      <p class="handle">@mono2547ee-dot</p>
+    </div>
+    <p class="bio">ผลงานรายวิชา Graph Database — ระบบแนะนำด้วย Neo4j, Python และ Streamlit</p>
+    <a class="pbtn" href="https://github.com/mono2547ee-dot" target="_blank" rel="noopener">ดูโปรไฟล์ GitHub ↗</a>
+    <ul class="facts">
+      <li>รหัสนักศึกษา <b>664245038</b></li>
+      <li>หมู่เรียน <b>66/44</b></li>
+      <li>คณะวิทยาศาสตร์และเทคโนโลยี</li>
+      <li>สาขาวิทยาการคอมพิวเตอร์</li>
+      <li><b>4</b> งานที่ส่ง</li>
+      <li>เครื่องมือ: Neo4j · Cypher · Python · Streamlit</li>
+    </ul>
+    <h2 class="side-title">ทางลัดไปยังงาน</h2>
+    <ul class="quick">
+      <li><a href="#work1"><span class="dot">1</span>Club Recommendation Graph</a></li>
+      <li><a href="#work2"><span class="dot">2</span>Manga Recommender (Colab)</a></li>
+      <li><a href="#work3"><span class="dot">3</span>Manga + Neo4j</a></li>
+      <li><a href="#work4"><span class="dot">4</span>Manga Web App (Streamlit)</a></li>
+    </ul>
+  </aside>
+
+  <!-- ===== งานทั้งหมด ===== -->
+  <main id="works">
+    <div class="head">
+      <h2>งานที่ส่งอาจารย์</h2>
+      <p>คลิกที่รูปหรือปุ่มเพื่อเปิดดูแต่ละงาน</p>
+    </div>
+
+    <div class="cards">
+
+      <article class="card" id="work1">
+        <a class="thumb" href="assets/work1-club-recommendation-neo4j.pdf" target="_blank" rel="noopener" aria-label="เปิดไฟล์ PDF งานชิ้นที่ 1">
+          <img src="assets/work1.jpg" alt="หน้าแรกของเอกสาร Club Recommendation Graph ด้วย Neo4j" loading="lazy">
+        </a>
+        <div class="body">
+          <span class="badge">งานชิ้นที่ 1</span>
+          <h3>Club Recommendation Graph ด้วย Neo4j</h3>
+          <p>แนะนำชมรมจากเครือข่ายเพื่อนและความสนใจของนักเรียน ออกแบบ Node (Student, Club, Interest) และ Relationship (FRIEND_OF, MEMBER_OF, INTERESTED_IN, FOCUSES_ON)</p>
+          <ul class="tags"><li>Neo4j</li><li>Cypher</li><li>Graph Model</li></ul>
+          <div class="actions">
+            <a class="btn primary" href="assets/work1-club-recommendation-neo4j.pdf" target="_blank" rel="noopener">เปิดไฟล์ PDF</a>
+            <a class="btn" href="https://colab.research.google.com/drive/1mlHucVRjWcwj0e8dPKCZV1piBcQ4QqKg" target="_blank" rel="noopener">เปิดใน Colab ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" id="work2">
+        <a class="thumb" href="https://colab.research.google.com/drive/1Dua6z2I-1jqqgjSVgKrnkRCkOLcwgoup" target="_blank" rel="noopener" aria-label="เปิดงานชิ้นที่ 2 ใน Colab">
+          <img src="assets/work2.jpg" alt="สมุดงาน Google Colab ระบบแนะนำมังงะ แสดงรายชื่อผู้ใช้และมังงะ" loading="lazy">
+        </a>
+        <div class="body">
+          <span class="badge">งานชิ้นที่ 2</span>
+          <h3>Manga Recommender บน Google Colab</h3>
+          <p>แนวคิด: ดูว่าผู้ใช้ชอบมังงะเรื่องอะไร → หาผู้ใช้คนอื่นที่ชอบคล้ายกัน → แนะนำมังงะเรื่องอื่นที่คนกลุ่มนั้นชอบ</p>
+          <ul class="tags"><li>Python</li><li>Google Colab</li><li>Recommendation</li></ul>
+          <div class="actions">
+            <a class="btn primary" href="https://colab.research.google.com/drive/1Dua6z2I-1jqqgjSVgKrnkRCkOLcwgoup" target="_blank" rel="noopener">เปิดใน Colab ↗</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" id="work3">
+        <a class="thumb" href="https://bookmanga2-kzjhmqpu7mza9ibiilkgph.streamlit.app/" target="_blank" rel="noopener" aria-label="เปิดงานชิ้นที่ 3">
+          <img src="assets/work3.jpg" alt="สมุดงาน Colab ระบบแนะนำมังงะที่เชื่อมต่อ Neo4j แสดงขั้นตอนติดตั้ง Neo4j Python Driver" loading="lazy">
+        </a>
+        <div class="body">
+          <span class="badge">งานชิ้นที่ 3</span>
+          <h3>Manga Recommender เชื่อมต่อ Neo4j</h3>
+          <p>เก็บข้อมูลเป็นกราฟ (User)-[:LIKES]->(Manga) บน Neo4j Aura เชื่อมต่อจาก Colab ด้วย Neo4j Python Driver แล้วใช้ Cypher หาคำแนะนำ</p>
+          <ul class="tags"><li>Neo4j Aura</li><li>Cypher</li><li>Python</li></ul>
+          <div class="actions">
+            <a class="btn primary" href="https://bookmanga2-kzjhmqpu7mza9ibiilkgph.streamlit.app/" target="_blank" rel="noopener">ดูผลบนเว็บแอป ↗</a>
+            <!-- ถ้ามีลิงก์ Colab ของ "Neo4j_แนะนำหนังสือการ์ตูน" ให้เอาเครื่องหมาย comment ออก แล้วใส่ลิงก์ของคุณ
+            <a class="btn" href="ใส่ลิงก์ Colab ที่นี่" target="_blank" rel="noopener">เปิดใน Colab ↗</a>
+            -->
+          </div>
+        </div>
+      </article>
+
+      <article class="card" id="work4">
+        <a class="thumb" href="https://bookmanga2-kzjhmqpu7mza9ibiilkgph.streamlit.app/" target="_blank" rel="noopener" aria-label="เปิดเว็บแอปงานชิ้นที่ 4">
+          <img src="assets/work4.jpg" alt="หน้า Dashboard ของเว็บแอป Manga Recommendation System" loading="lazy">
+        </a>
+        <div class="body">
+          <span class="badge">งานชิ้นที่ 4</span>
+          <h3>Manga Recommendation System (Streamlit)</h3>
+          <p>เว็บแอปที่ต่อกับ Neo4j Aura: Dashboard, แนะนำมังงะพร้อมเหตุผล, ค้นหา, จัดการ Likes, Graph Explorer และ Admin Panel พร้อมรูปปกอัตโนมัติ</p>
+          <ul class="tags"><li>Streamlit</li><li>Neo4j Aura</li><li>Python</li><li>GitHub</li></ul>
+          <div class="actions">
+            <a class="btn primary" href="https://bookmanga2-kzjhmqpu7mza9ibiilkgph.streamlit.app/" target="_blank" rel="noopener">เปิดเว็บแอป ↗</a>
+            <a class="btn" href="assets/Manga_Recommendation_System.pptx" download>สไลด์นำเสนอ (.pptx)</a>
+            <a class="btn" href="https://github.com/mono2547ee-dot/BookManga" target="_blank" rel="noopener">ซอร์สโค้ด ↗</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+</div>
+
+<footer>ผลงานรายวิชา Graph Database · สร้างด้วย HTML ล้วน และเผยแพร่ผ่าน GitHub Pages</footer>
+
+</body>
+</html>
